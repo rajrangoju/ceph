@@ -28,7 +28,6 @@
 static const uint32_t MAX_SHARED_RX_SGE_COUNT = 1;
 static const uint32_t MAX_INLINE_DATA = 0;
 static const uint32_t TCP_MSG_LEN = sizeof("0000:00000000:00000000:00000000:00000000000000000000000000000000");
-static const uint32_t CQ_DEPTH = 30000;
 
 Port::Port(CephContext *cct, struct ibv_context* ictxt, uint8_t ipn): ctxt(ictxt), port_num(ipn), port_attr(new ibv_port_attr), gid_idx(0)
 {
@@ -1073,7 +1072,7 @@ Infiniband::CompletionQueue* Infiniband::create_comp_queue(
     CephContext *cct, CompletionChannel *cc)
 {
   Infiniband::CompletionQueue *cq = new Infiniband::CompletionQueue(
-      cct, *this, CQ_DEPTH, cc);
+      cct, *this, cct->_conf->ms_async_rdma_cq_depth, cc);
   if (cq->init()) {
     delete cq;
     return NULL;

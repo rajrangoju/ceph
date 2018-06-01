@@ -1104,6 +1104,10 @@ std::vector<Option> get_global_options() {
     .set_default(false)
     .set_description(""),
 
+    Option("ms_async_rdma_cq_depth", Option::TYPE_UINT, Option::LEVEL_ADVANCED)
+    .set_default(30000)
+    .set_description("rdma cq depth"),
+
     Option("ms_async_rdma_type", Option::TYPE_STR, Option::LEVEL_ADVANCED)
     .set_default("ib")
     .set_description(""),
