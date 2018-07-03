@@ -574,9 +574,10 @@ int RDMAConnectedSocketImpl::post_work_request(std::vector<Chunk*> &tx_buffers)
 
   ibv_send_wr *bad_tx_work_request;
   if (ibv_post_send(qp->get_qp(), iswr, &bad_tx_work_request)) {
-    ldout(cct, 1) << __func__ << " failed to send data"
+    ldout(cct, 1) << __func__ << " failed to send data" << " QP=" << qp << " qp=" << qp->get_qp()
                   << " (most probably should be peer not ready): "
                   << cpp_strerror(errno) << dendl;
+    worker->return_tx_buffers(tx_buffers);
     worker->perf_logger->inc(l_msgr_rdma_tx_failed);
     return -errno;
   }

@@ -152,6 +152,7 @@ class RDMAWorker : public Worker {
   virtual void initialize() override;
   RDMAStack *get_stack() { return stack; }
   int get_reged_mem(RDMAConnectedSocketImpl *o, std::vector<Chunk*> &c, size_t bytes);
+  void return_tx_buffers(std::vector<Chunk*> &tx_buffers);
   void remove_pending_conn(RDMAConnectedSocketImpl *o) {
     assert(center.in_thread());
     pending_sent_conns.remove(o);

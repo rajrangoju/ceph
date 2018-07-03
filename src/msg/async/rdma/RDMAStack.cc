@@ -548,7 +548,10 @@ int RDMAWorker::get_reged_mem(RDMAConnectedSocketImpl *o, std::vector<Chunk*> &c
   return r;
 }
 
-
+void RDMAWorker::return_tx_buffers(std::vector<Chunk*> &tx_buffers)
+{
+  dispatcher->post_tx_buffer(tx_buffers);
+}
 void RDMAWorker::handle_pending_message()
 {
   ldout(cct, 20) << __func__ << " pending conns " << pending_sent_conns.size() << dendl;
