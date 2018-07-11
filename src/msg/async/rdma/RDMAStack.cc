@@ -247,8 +247,13 @@ void RDMADispatcher::polling()
         while (it != dead_queue_pairs.end()) {
           auto i = *it;
           // Bypass QPs that do not collect all Tx completions yet.
-          if (i->get_tx_wr()) {
-            ldout(cct, 20) << __func__ << " bypass qp=" << i << " tx_wr=" << i->get_tx_wr() << dendl;
+          if ((i->get_tx_wr()) || (!i->is_dead())){
+            if (i->get_tx_wr())
+              ldout(cct, 20) << __func__ << " bypass qp=" << i << " tx_wr=" << i->get_tx_wr() << dendl;
+            else {
+              i->to_dead();
+              ldout(cct, 20) << __func__ << " bypass qp=" << i << " moved to dead state " << dendl;
+            }
             ++it;
           } else {
             ldout(cct, 10) << __func__ << " finally delete qp=" << i << dendl;
